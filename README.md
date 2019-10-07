@@ -1,2 +1,2 @@
-# Homely
-Help you find a home easily
+# Threadit
+Trend easily amongst people who you may actually know.
