@@ -1,0 +1,23 @@
+{
+  "name": "threadit-webapp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Bryan-Cee/threadit-webapp.git",
+  "author": "Bryan-Cee <cheruiyotbryan@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "add": "^2.0.6",
+    "global": "^4.4.0",
+    "next": "^9.1.1",
+    "now": "^16.3.1",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "yarn": "^1.19.1"
+  }
+}
