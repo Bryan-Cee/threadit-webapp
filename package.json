@@ -1,7 +1,8 @@
 {
   "name": "threadit-webapp",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Threadit, the social media app for the unpopular",
+  "main": "app.js",
   "repository": "https://github.com/Bryan-Cee/threadit-webapp.git",
   "author": "Bryan-Cee <cheruiyotbryan@gmail.com>",
   "license": "MIT",
@@ -12,12 +13,16 @@
     "start": "next start"
   },
   "dependencies": {
-    "add": "^2.0.6",
-    "global": "^4.4.0",
-    "next": "^9.1.1",
-    "now": "^16.3.1",
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2",
-    "yarn": "^1.19.1"
+    "next": "^9.1.2",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.7.8",
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.1",
+    "@zeit/next-typescript": "^1.1.1",
+    "@types/next": "^8.0.6",
+    "typescript": "3.6.3"
   }
 }
