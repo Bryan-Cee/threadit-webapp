@@ -21,6 +21,7 @@ yarn-error.log*
 yarn.lock
 
 #IDE configs
+.idea
 .idea/.gitignore
 .idea/dictionaries/
 

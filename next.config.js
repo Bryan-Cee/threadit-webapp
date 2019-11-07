@@ -1,4 +1,8 @@
 // next.config.js
-const withTypescript = require('@zeit/next-typescript');
+// require('dotenv').config();
+const webpack = require('webpack');
+const withSass = require('@zeit/next-sass');
 
-module.exports = withTypescript();
+module.exports = withSass({
+    cssModules: true
+});
