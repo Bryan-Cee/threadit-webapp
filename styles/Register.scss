@@ -1,0 +1,25 @@
+.width {
+  width: 300px;
+}
+
+.containerBackground {
+  background-color: #ffffff;
+  width: 50vw !important;
+  min-height: 50vh !important;
+  height: max-content;
+}
+
+.side {
+  background-color: #2699FB;
+  height: 50vh;
+}
+//#2699FB;
+
+.zeroPadding {
+  padding: 0 !important;
+  height: 100% !important;
+}
+
+.addPadding {
+  padding: 2em 2em 2em 0;
+}
