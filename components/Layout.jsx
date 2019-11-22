@@ -1,13 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import CustomHeader from './Header';
+import React from "react";
+import PropTypes from "prop-types";
+import CustomHeader from "./Header";
 
-const styles = require('../styles/Layout.scss');
+const styles = require("../styles/Layout.scss");
 // TODO:
 //  - Add the main container styling
 //  - Specify fonts
 //  - Consider using grid to structure the layout.
-const Layout = props => {
+const Layout = (props) => {
   const { children } = props;
   return (
     <div>
