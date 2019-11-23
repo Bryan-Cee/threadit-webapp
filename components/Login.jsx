@@ -24,6 +24,7 @@ const Login = () => {
   const signUp = () => AuthMutation({ variables: { email, password } })
     .then(({ data }) => {
       localStorage.setItem("token", data.login.token);
+      localStorage.setItem("userId", data.login.user.userId);
       localStorage.setItem("email", data.login.user.email);
       localStorage.setItem("username", data.login.user.username);
 
@@ -37,7 +38,11 @@ const Login = () => {
       }
 
       // Update the AuthContext
-      Auth.login();
+      Auth.login(
+        data.login.user.userId,
+        data.login.user.email,
+        data.login.user.username
+      );
     })
     .catch((err) => {
       if (err && err.graphQLErrors) {
@@ -129,9 +134,11 @@ const Login = () => {
                 </Form>
                 { mutationLoading ? null : (
                   <>
-                    <h5 color="blue">
-                      <a href="/">Forgot Password?</a>
-                    </h5>
+                    { register ? <h5>{" "}</h5> : (
+                      <h5 color="blue">
+                        <a href="/">Forgot Password?</a>
+                      </h5>
+                    )}
                     <button
                       type="button"
                       onClick={() => setRegister(!register)}

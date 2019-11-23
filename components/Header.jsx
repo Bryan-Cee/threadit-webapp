@@ -21,7 +21,9 @@ const Header = () => {
           />
         </div>
         <div>
-          { Auth.isAuthenticated ? null : <Login />}
+          { Auth.isAuthenticated
+            ? <h5>Welcome to Threadit</h5>
+            : <Login />}
         </div>
       </div>
     </div>

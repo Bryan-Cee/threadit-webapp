@@ -1,4 +1,5 @@
 import React, { Component, createContext } from "react";
+import Proptypes from "prop-types";
 
 const authState = {
   username: null,
@@ -7,20 +8,19 @@ const authState = {
 };
 
 export const AuthContext = createContext(authState);
-// export const AuthRef = createRef();
+
 export default class AuthController extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId: null,
       username: null,
       email: null,
       isAuthenticated: null,
     };
   }
 
-
   componentDidMount() {
-    console.log("Authentincation checking in Mount");
     const token = localStorage.getItem("token");
     if (token === null) {
       this.setState({ isAuthenticated: false });
@@ -37,25 +37,36 @@ export default class AuthController extends Component {
         // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ isAuthenticated: false });
       } else {
+        const username = localStorage.getItem("username");
+        const email = localStorage.getItem("email");
+        const userId = localStorage.getItem("userId");
         // eslint-disable-next-line react/no-did-update-set-state
-        this.setState({ isAuthenticated: true });
+        this.setState({
+          isAuthenticated: true, username, email, userId
+        });
       }
     }
   }
 
-  login = () => {
-    this.setState({ isAuthenticated: true });
+  login = (userId, email, username) => {
+    this.setState({
+      isAuthenticated: true,
+      userId,
+      email,
+      username
+    });
   };
 
   render() {
     const { children } = this.props;
     return (
-      <AuthContext.Provider value={
-        { ...this.state, login: this.login }
-      }
-      >
+      <AuthContext.Provider value={{ ...this.state, login: this.login }}>
         {children}
       </AuthContext.Provider>
     );
   }
 }
+
+AuthController.propTypes = {
+  children: Proptypes.any.isRequired,
+};
