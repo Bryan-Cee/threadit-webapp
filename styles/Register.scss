@@ -13,11 +13,19 @@
   background-color: #2699FB;
   height: 50vh;
 }
-//#2699FB;
 
 .zeroPadding {
   padding: 0 !important;
   height: 100% !important;
+}
+
+.verify {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-weight: bolder;
+  text-align: center;
+  font-size: x-large;
 }
 
 .addPadding {

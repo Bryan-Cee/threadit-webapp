@@ -10,7 +10,7 @@ const Header = () => {
     <div className={styles.customHeader}>
       <div className={styles.customHeader__navbar}>
         <img
-          src="./img/needle-with-thread-to-sew-clothes-1.svg"
+          src="/img/needle-with-thread-to-sew-clothes-1.svg"
           alt="threadit-logo"
           className={styles.logo}
         />

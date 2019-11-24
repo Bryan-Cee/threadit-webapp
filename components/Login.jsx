@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import {
   Button, Form, Grid, Message, Modal
@@ -14,6 +14,7 @@ const Login = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [register, setRegister] = useState(false);
+  const [registerResponse, setRegisterResponse] = useState(false);
 
   const mutation = register ? REGISTER : LOGIN;
   const [AuthMutation, { loading: mutationLoading }] = useMutation(mutation);
@@ -21,38 +22,61 @@ const Login = () => {
   const onOpen = () => { setOpen(true); };
   const onClose = () => { setOpen(false); };
 
+  const resetLoginState = () => {
+    setError("");
+    setEmail("");
+    setPassword("");
+    if (error) {
+      setError("");
+    }
+  };
   const signUp = () => AuthMutation({ variables: { email, password } })
     .then(({ data }) => {
-      localStorage.setItem("token", data.login.token);
-      localStorage.setItem("userId", data.login.user.userId);
-      localStorage.setItem("email", data.login.user.email);
-      localStorage.setItem("username", data.login.user.username);
+      if (data && data.register) {
+        // Reset the login modal states
+        resetLoginState();
+        const verifiedText = localStorage.setItem("verified", data.register);
+        setRegisterResponse(verifiedText);
+        Auth.register(
+          data.register
+        );
+      } else {
+        const { token, user } = data.login;
+        localStorage.setItem("token", token);
+        localStorage.setItem("userId", user.userId);
+        localStorage.setItem("email", user.email);
+        localStorage.setItem("username", user.username);
+        localStorage.removeItem("verified");
 
-      // Reset the login modal states
-      setOpen(false);
-      setError("");
-      setEmail("");
-      setPassword("");
-      if (error) {
-        setError("");
+        // Reset the login modal states
+        resetLoginState();
+        setOpen(false);
+        // Update the AuthContext
+        Auth.login(
+          data.login.user.userId,
+          data.login.user.email,
+          data.login.user.username
+        );
+        Auth.register(null);
       }
-
-      // Update the AuthContext
-      Auth.login(
-        data.login.user.userId,
-        data.login.user.email,
-        data.login.user.username
-      );
     })
     .catch((err) => {
       if (err && err.graphQLErrors) {
         err.graphQLErrors.map((e) => {
-          if (e.extensions.authenticationErrors) {
-            setError(e.extensions.authenticationErrors);
+          if (e.extensions.userInputError) {
+            setError(e.extensions.userInputError);
+          }
+          if (e.extensions.code === "UNAUTHENTICATED") {
+            setError({ accountVerified: e.message });
           }
         });
       }
     });
+
+  useEffect(() => {
+    const verifiedText = localStorage.getItem("verified");
+    setRegisterResponse(verifiedText);
+  }, [registerResponse]);
 
   return (
     <Modal
@@ -70,87 +94,98 @@ const Login = () => {
               <div className={styles.side} />
             </Grid.Column>
             <Grid.Column width={10}>
-              <div className={styles.addPadding}>
-                { register ? <h1>Sign Up</h1> : <h1>Sign In</h1>}
-                <Form
-                  className={styles.width}
-                  onSubmit={signUp}
-                  error
-                  loading={mutationLoading}
-                >
-                  <Form.Field>
-                    <label>Email</label>
-                    <input
-                      placeholder="Email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      type="email"
-                    />
-                    {error.email ? (
-                      <Message
-                        error
-                        content={error.email}
-                      />
-                    ) : null}
-                  </Form.Field>
-                  <Form.Field>
-                    <label text="text">Password</label>
-                    <input
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      type="password"
-                      required
-                    />
-                    {error.password ? (
-                      <Message
-                        error
-                        content={error.password}
-                      />
-                    ) : null}
-                  </Form.Field>
-                  { register ? (
+              { registerResponse ? (
+                <div className={styles.verify}>{registerResponse}</div>
+              ) : (
+                <div className={styles.addPadding}>
+                  { register ? <h1>Sign Up</h1> : <h1>Sign In</h1>}
+                  <Form
+                    className={styles.width}
+                    onSubmit={signUp}
+                    error
+                    loading={mutationLoading}
+                  >
                     <Form.Field>
-                      <label text="text">Confirm Password</label>
+                      <label>Email</label>
                       <input
-                        placeholder="Confirm Password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        type="password"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
+                        type="email"
                       />
-                      {error.confirmPassword ? (
+                      {error.email ? (
                         <Message
                           error
-                          content={error.confirmPassword}
+                          content={error.email}
                         />
                       ) : null}
                     </Form.Field>
-                  ) : null }
-                  <Button type="submit">
-                    { register ? `SIGN UP` : `SIGN IN` }
-                  </Button>
-                </Form>
-                { mutationLoading ? null : (
-                  <>
-                    { register ? <h5>{" "}</h5> : (
-                      <h5 color="blue">
-                        <a href="/">Forgot Password?</a>
-                      </h5>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => setRegister(!register)}
-                    >
-                      { register
-                        ? <h5 color="blue">Have an account? Login</h5>
-                        : <h5 color="blue">New to Threadit? Create Account</h5>}
-                    </button>
-                  </>
-                )}
+                    <Form.Field>
+                      <label text="text">Password</label>
+                      <input
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        type="password"
+                        required
+                      />
+                      {error.password ? (
+                        <Message
+                          error
+                          content={error.password}
+                        />
+                      ) : null}
+                      {error.accountVerified ? (
+                        <Message
+                          error
+                          content={error.accountVerified}
+                        />
+                      ) : null}
+                    </Form.Field>
+                    { register ? (
+                      <Form.Field>
+                        <label text="text">Confirm Password</label>
+                        <input
+                          placeholder="Confirm Password"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          type="password"
+                          required
+                        />
+                        {error.confirmPassword ? (
+                          <Message
+                            error
+                            content={error.confirmPassword}
+                          />
+                        ) : null}
+                      </Form.Field>
+                    ) : null }
+                    <Button type="submit">
+                      { register ? `SIGN UP` : `SIGN IN` }
+                    </Button>
+                  </Form>
+                  { mutationLoading ? null : (
+                    <>
+                      { register ? <h5>{" "}</h5> : (
+                        <h5 color="blue">
+                          <a href="/">Forgot Password?</a>
+                        </h5>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setRegister(!register)}
+                      >
+                        { register
+                          ? <h5 color="blue">Have an account? Login</h5>
+                          // eslint-disable-next-line max-len
+                          : <h5 color="blue">New to Threadit? Create Account</h5>}
+                      </button>
+                    </>
+                  )}
 
-              </div>
+                </div>
+              )}
             </Grid.Column>
           </Grid.Row>
         </Grid>

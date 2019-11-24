@@ -17,20 +17,23 @@ export default class AuthController extends Component {
       username: null,
       email: null,
       isAuthenticated: null,
+      verified: null,
+      token: null,
     };
   }
 
   componentDidMount() {
     const token = localStorage.getItem("token");
+    const verified = localStorage.getItem("verified");
     if (token === null) {
-      this.setState({ isAuthenticated: false });
+      this.setState({ isAuthenticated: false, verified });
     } else {
-      this.setState({ isAuthenticated: true });
+      this.setState({ isAuthenticated: true, verified });
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { isAuthenticated } = this.state;
+    const { isAuthenticated, verified } = this.state;
     if (prevState.isAuthenticated !== isAuthenticated) {
       const token = localStorage.getItem("token");
       if (token === null) {
@@ -46,21 +49,36 @@ export default class AuthController extends Component {
         });
       }
     }
+
+    if (prevState.verified !== verified) {
+      const registerText = localStorage.getItem("verified");
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ verified: registerText });
+    }
   }
 
-  login = (userId, email, username) => {
+  login = (userId, email, username, token) => {
     this.setState({
       isAuthenticated: true,
       userId,
       email,
-      username
+      username,
+      token
+    });
+  };
+
+  register = (verified) => {
+    this.setState({
+      verified,
     });
   };
 
   render() {
     const { children } = this.props;
     return (
-      <AuthContext.Provider value={{ ...this.state, login: this.login }}>
+      <AuthContext.Provider
+        value={{ ...this.state, login: this.login, register: this.register }}
+      >
         {children}
       </AuthContext.Provider>
     );
