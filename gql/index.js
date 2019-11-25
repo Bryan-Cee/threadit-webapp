@@ -33,3 +33,9 @@ export const VERIFYACCOUNT = gql`
         }
     }
 `;
+
+export const RESETPASSWORD = gql`
+    mutation resetRequest($email: String!) {
+        resetRequest(email: $email)
+    }
+`;

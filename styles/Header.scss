@@ -30,11 +30,22 @@
   }
 }
 
-.logo  {
-  width: 48px;
-  height: 48px;
-  padding: 4px;
-  margin-left: 2em;
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #ffffff;
+
+  &:hover {
+    color: #ffffff;
+  }
+
+  &Pic  {
+    width: 48px;
+    height: 48px;
+    padding: 4px;
+    margin-left: 2em;
+  }
 }
 .width {
   width: 300px;

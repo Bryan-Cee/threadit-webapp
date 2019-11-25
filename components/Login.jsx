@@ -1,20 +1,23 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import {
-  Button, Form, Grid, Message, Modal
+  Button, Form, Grid, Message, Modal, Divider
 } from "semantic-ui-react";
 import styles from "../styles/Register.scss";
 import { LOGIN, REGISTER } from "../gql";
 import { AuthContext } from "./AuthController";
+import { isValidEmail } from "../helpers";
 
+// eslint-disable-next-line complexity
 const Login = () => {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [register, setRegister] = useState(false);
+  const [register, setRegister] = useState(true);
   const [registerResponse, setRegisterResponse] = useState(false);
+  const [disable, setDisable] = useState(true);
 
   const mutation = register ? REGISTER : LOGIN;
   const [AuthMutation, { loading: mutationLoading }] = useMutation(mutation);
@@ -30,7 +33,7 @@ const Login = () => {
       setError("");
     }
   };
-  const signUp = () => AuthMutation({ variables: { email, password } })
+  const signUp = () => AuthMutation({ variables: { email, password }})
     .then(({ data }) => {
       if (data && data.register) {
         // Reset the login modal states
@@ -78,6 +81,21 @@ const Login = () => {
     setRegisterResponse(verifiedText);
   }, [registerResponse]);
 
+  // Validate the form inputs
+  useEffect(() => {
+    if (register) {
+      if (isValidEmail(email) && !!password && (password === confirmPassword)) {
+        setDisable(false);
+      } else {
+        setDisable(true);
+      }
+    } else if (isValidEmail(email) && !!password) {
+      setDisable(false);
+    } else {
+      setDisable(true);
+    }
+  }, [password, confirmPassword, email]);
+
   return (
     <Modal
       trigger={<Button inverted>LOGIN/REGISTER</Button>}
@@ -86,6 +104,7 @@ const Login = () => {
       onClose={onClose}
       onOpen={onOpen}
       open={open}
+      className={styles.zero}
     >
       <Modal.Content className={styles.zeroPadding}>
         <Grid stretched>
@@ -161,7 +180,7 @@ const Login = () => {
                         ) : null}
                       </Form.Field>
                     ) : null }
-                    <Button type="submit">
+                    <Button type="submit" disabled={disable}>
                       { register ? `SIGN UP` : `SIGN IN` }
                     </Button>
                   </Form>
@@ -169,18 +188,19 @@ const Login = () => {
                     <>
                       { register ? <h5>{" "}</h5> : (
                         <h5 color="blue">
-                          <a href="/">Forgot Password?</a>
+                          <a href="/reset/password">Forgot Password?</a>
                         </h5>
                       )}
-                      <button
-                        type="button"
+                      <Divider />
+                      <Button
+                        color="blue"
                         onClick={() => setRegister(!register)}
                       >
                         { register
                           ? <h5 color="blue">Have an account? Login</h5>
                           // eslint-disable-next-line max-len
                           : <h5 color="blue">New to Threadit? Create Account</h5>}
-                      </button>
+                      </Button>
                     </>
                   )}
 

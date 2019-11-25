@@ -12,7 +12,7 @@ const Register = () => {
   const [error, setError] = useState("");
 
   const [SignUp] = useMutation(REGISTER);
-  const signUp = () => SignUp({ variables: { email, password } })
+  const signUp = () => SignUp({ variables: { email, password }})
     .then((data) => console.log(data))
     .catch((err) => console.log({ err }));
 

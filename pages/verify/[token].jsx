@@ -2,9 +2,6 @@ import React, { useState, useContext, useEffect } from "react";
 import { useMutation } from "@apollo/react-hooks";
 import Router from "next/router";
 import PropTypes from "prop-types";
-import {
-  Grid, Card, Feed, Icon,
-} from "semantic-ui-react";
 import { AuthContext } from "../../components/AuthController";
 
 import { VERIFYACCOUNT } from "../../gql";
@@ -12,6 +9,7 @@ import { VERIFYACCOUNT } from "../../gql";
 //  the show the correct page
 //  set the auth context with the authentication details
 const Verify = ({ token }) => {
+  const [error, setError] = useState("");
   const [verifyMutation, { loading }] = useMutation(VERIFYACCOUNT);
   const Auth = useContext(AuthContext);
   useEffect(() => {
@@ -41,7 +39,8 @@ const Verify = ({ token }) => {
         await Router.push("/");
       } catch (e) {
         // TODO: handle error in on Error
-        console.error(e.message);
+        setError("Opps something went wrong, "
+          + "we have sent another link to your email.");
       }
     };
     verifyAccount();
@@ -49,7 +48,7 @@ const Verify = ({ token }) => {
 
   return loading
     ? <div>Loading</div>
-    : <div>This is the verification page.</div>;
+    : <div>{error}</div>;
 };
 
 Verify.getInitialProps = async ({ query }) => ({ token: query.token });
