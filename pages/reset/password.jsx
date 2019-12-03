@@ -4,7 +4,7 @@ import {
 } from "semantic-ui-react";
 import { useMutation } from "@apollo/react-hooks";
 
-import { RESETPASSWORD } from "../../gql";
+import { RESETREQUEST } from "../../gql";
 import { isValidEmail } from "../../helpers";
 
 import styles from "../../styles/ResetPassword.scss";
@@ -14,7 +14,7 @@ const Password = () => {
   const [emailSent, setEmailSent] = useState("");
   const [disabled, setDisabled] = useState(true);
 
-  const [resetPasswordMutation, { loading }] = useMutation(RESETPASSWORD);
+  const [resetRequestMutation, { loading }] = useMutation(RESETREQUEST);
 
   useEffect(() => {
     if (isValidEmail(email)) {
@@ -23,7 +23,7 @@ const Password = () => {
       setDisabled(true);
     }
   }, [email]);
-  const resetPasswordRequest = () => resetPasswordMutation({
+  const resetPasswordRequest = () => resetRequestMutation({
     variables: { email }
   }).then(({ data }) => {
     setEmailSent(data.resetRequest);

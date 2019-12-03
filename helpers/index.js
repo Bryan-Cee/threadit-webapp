@@ -1,3 +1,5 @@
+import isLength from "validator/lib/isLength";
+import matches from "validator/lib/matches";
 
 // eslint-disable-next-line import/prefer-default-export
 export const isValidEmail = (email) => {
@@ -7,3 +9,31 @@ export const isValidEmail = (email) => {
   return emailPattern.test(email);
 };
 
+export const isValidPassword = (password) => {
+  // validate password
+  if (!isLength(password, 8)) {
+    return (
+      "The password must be eight characters or longer"
+    );
+  }
+  // TODO:
+  //  regex not matching uppercase and lowercase correctly
+  if (!matches(password, /(?=.*[A-Z]+)/i)) {
+    return (`The password must contain at least 1
+         uppercase alphabetical character`);
+  }
+  if (!matches(password, /(?=.*[a-z])/i)) {
+    return (`The password must contain at least 1 
+        lowercase alphabetical character`);
+  }
+  if (!matches(password, /(?=.*[0-9])/i)) {
+    return (`The password must contain at least 1 
+        numeric character`);
+  }
+  if (!matches(password, /(?=.*[!@#$%^&*])/i)) {
+    return (`The password must contain at least 
+        one special character`);
+  }
+
+  return "Valid";
+};
