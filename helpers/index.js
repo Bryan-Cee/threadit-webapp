@@ -16,13 +16,11 @@ export const isValidPassword = (password) => {
       "The password must be eight characters or longer"
     );
   }
-  // TODO:
-  //  regex not matching uppercase and lowercase correctly
-  if (!matches(password, /(?=.*[A-Z]+)/i)) {
+  if (!matches(password, /(?=.*[A-Z]+)/g)) {
     return (`The password must contain at least 1
          uppercase alphabetical character`);
   }
-  if (!matches(password, /(?=.*[a-z])/i)) {
+  if (!matches(password, /(?=.*[a-z])/g)) {
     return (`The password must contain at least 1 
         lowercase alphabetical character`);
   }
