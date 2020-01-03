@@ -9,8 +9,8 @@
   "private": true,
   "scripts": {
     "dev": "next",
-    "build": "next build && next export",
-    "start": "next start",
+    "build": "next build",
+    "start": "next start -p $PORT",
     "lint": "eslint ."
   },
   "husky": {
