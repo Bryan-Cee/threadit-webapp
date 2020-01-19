@@ -26,7 +26,7 @@ const Index = () => (
                   <Feed.User>Elliot Fu</Feed.User>
                   {" "}
 added you as a friend
-                  <Feed.Date>1 Hour Ago { process.env.URI || "no env"}</Feed.Date>
+                  <Feed.Date>1 Hour Ago</Feed.Date>
                 </Feed.Summary>
                 <Feed.Meta>
                   <Feed.Like>
