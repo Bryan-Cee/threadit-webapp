@@ -1,17 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
-import CustomHeader from "./Header";
+import Nav from "./Nav";
 
 const styles = require("../styles/Layout.scss");
-// TODO:
-//  - Add the main container styling
-//  - Specify fonts
-//  - Consider using grid to structure the layout.
+
 const Layout = (props) => {
   const { children } = props;
   return (
     <div>
-      <CustomHeader />
+      <Nav />
       <div className={styles.center}>
         {children}
       </div>

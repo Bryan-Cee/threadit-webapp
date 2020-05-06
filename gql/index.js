@@ -49,3 +49,24 @@ export const RESETPASSWORD = gql`
         }
     }
 `;
+
+export const GET_COMMUNITIES = gql`
+      query getCommunities($after: Int, $first: Int){
+          communities(after: $after, first: $first){
+              count
+              communities{
+                  communityId
+                  name
+                  createdAt
+                  description
+                  updatedAt
+                  founder{
+                      userId
+                      profileId
+                      username
+                      email
+                  }
+              }
+          }
+      }
+  `;
