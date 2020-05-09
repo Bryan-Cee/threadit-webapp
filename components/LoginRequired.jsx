@@ -1,22 +1,8 @@
 import React, { useEffect, useContext } from "react";
-import { parse } from "query-string";
 import { Auth0Context, useAuth0 as useAuth } from "../auth/AuthController";
 
 function getComponentName(ChildComponent) {
   return ChildComponent.displayName || ChildComponent.name || "Component";
-}
-
-function getReturnTo() {
-  if (window && window.location) {
-    return {
-      returnTo: {
-        pathname: window.location.pathname,
-        query: parse(window.location.search)
-      }
-    };
-  }
-
-  return { };
 }
 
 function tryGetInitialPropsMethod(child) {
@@ -42,18 +28,18 @@ export function withWrapper(ChildComponent, name, render) {
 
 export function withLoginRequired(ChildComponent) {
   return withWrapper(ChildComponent, "withLoginRequired", ({ path, ...rest }) => {
-    const { isLoading, isAuthenticated, onRedirectCallback } = useAuth();
+    const { loading, isAuthenticated, loginWithRedirect } = useAuth();
     const context = useContext(Auth0Context);
 
     useEffect(() => {
-      if (!onRedirectCallback || isLoading || isAuthenticated) {
+      if (!context.client || loading || isAuthenticated) {
         return;
       }
-
-      onRedirectCallback({ appState: getReturnTo() });
-    }, [isLoading, isAuthenticated, onRedirectCallback, path]);
+      loginWithRedirect({ appState: window.history.state });
+    }, [loading, isAuthenticated, loginWithRedirect, path]);
 
     return isAuthenticated === true
-      ? (<ChildComponent {...rest} />) : ((context.handlers.onRedirecting && context.handlers.onRedirecting()) || null);
+      ? <ChildComponent {...rest} />
+      : ((context.handlers.onRedirecting && context.handlers.onRedirecting()) || null);
   });
 }

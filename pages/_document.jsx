@@ -11,6 +11,7 @@ class MyDocument extends Document {
   }
 
   render() {
+    console.log("Inside _document render function.");
     return (
       <Html>
         <Head>

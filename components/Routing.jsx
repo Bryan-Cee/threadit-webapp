@@ -6,11 +6,11 @@ import { useAuth0 } from "../auth/AuthController";
 
 export const PrivateRoute = ({ path, title }) => {
   const { isAuthenticated, loading } = useAuth0();
-  return !loading && isAuthenticated && (
+  return (!loading && isAuthenticated) ? (
     <Link href={path}>
       <a style={{ color: "white" }}>{title}</a>
     </Link>
-  );
+  ) : null;
 };
 
 PrivateRoute.propTypes = {
