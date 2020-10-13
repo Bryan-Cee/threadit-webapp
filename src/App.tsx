@@ -1,8 +1,8 @@
 import React from 'react';
-import './App.css';
+import './assets/styles/App.css';
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import ExchangeRates from './Exchange';
+import ExchangeRates from './components/Exchange';
 
 const client = new ApolloClient({
   uri: 'https://48p1r2roz4.sse.codesandbox.io',
