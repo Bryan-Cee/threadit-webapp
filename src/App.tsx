@@ -1,33 +1,40 @@
 import React from 'react';
 import { Router } from '@reach/router';
-import { onError } from '@apollo/client/link/error';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from '@apollo/client';
 
+import Login from './pages/Login';
 import Feed from './pages/HomePage';
 import Profile from './pages/Profile';
-import Layout from './components/Layout';
-import Login from './pages/Login';
 import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword';
+import Layout from './components/Layout';
 import FeedList from "./components/FeedList";
+import ForgotPassword from './pages/ForgotPassword';
 
 import './assets/styles/App.css';
 
-const link = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors)
-    graphQLErrors.map(({ message, locations, path }) =>
-      console.log(
-        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-      )
-    );
-
-  if (networkError) console.log(`[Network error]: ${networkError}`);
+const cache = new InMemoryCache();
+const link = createHttpLink({
+  uri: process.env.REACT_APP_API_URL || '',
+  credentials: 'include',
 });
 
 const client = new ApolloClient({
-  uri: process.env.REACT_APP_API_URL || '',
-  cache: new InMemoryCache(),
-  credentials: 'include',
+  cache: cache,
+  link: link,
+  queryDeduplication: true,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'cache-and-network',
+      errorPolicy: 'ignore',
+    },
+    query: {
+      fetchPolicy: 'network-only',
+      errorPolicy: 'all',
+    },
+    mutate: {
+      errorPolicy: 'all',
+    },
+  }
 });
 
 function App() {
