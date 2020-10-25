@@ -12,8 +12,6 @@ import { RouteComponentProps, Link, Redirect } from '@reach/router';
 import { REGISTER } from "../gql";
 import { useMutation } from '@apollo/client';
 import Alert from '@material-ui/lab/Alert';
-import { Box } from '@material-ui/core';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 const useStyles = makeStyles((theme) => ({
     paper: {

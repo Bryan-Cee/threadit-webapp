@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { RouteComponentProps, Redirect, Link } from '@reach/router';
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { LOGIN } from '../gql';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -38,7 +38,7 @@ const Login: FC<RouteComponentProps> = () =>  {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [login, { data, loading }] = useLazyQuery(LOGIN);
+    const [login, { data, loading, error }] = useLazyQuery(LOGIN);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (e.target.name === "email") {
@@ -48,10 +48,14 @@ const Login: FC<RouteComponentProps> = () =>  {
         }
     };
 
+    if (error) {
+        console.log({ error })
+    }
     if (loading) return <p>Loading ...</p>;
 
     if (data?.login?.login) {
         console.log(data);
+        return <Redirect noThrow to="/profile" />;
     }
 
     return (
