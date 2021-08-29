@@ -1,4 +1,4 @@
-name: Auto approve
+name: Auto approve and merge PR
 
 on:
   pull_request_target
@@ -11,3 +11,10 @@ jobs:
       if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
       with:
         github-token: "${{ secrets.GITHUB_TOKEN }}"
+  merge-pr:
+   runs-on: ubuntu-latest
+   steps:
+    - name: Checkout to repo
+      uses: actions/checkout
+    - name: Merge repo 
+    - uses: ./.github/actions/approve-and-merge-pr.
